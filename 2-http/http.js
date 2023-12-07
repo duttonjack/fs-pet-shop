@@ -1,4 +1,3 @@
-
 const http = require("http");
 const fs = require("fs"); 
 const port = process.env.PORT || 8000;
@@ -12,12 +11,9 @@ var requestHandler = (req, res) => {
         res.end(data)
        })
     } else if(req.method === 'GET') {
-      let urlSplit = req.url.split("/")
-      //console.log(urlSplit[2])
-      
+      let urlSplit = req.url.split("/")      
       fs.readFile(`../pets.json`, (err, data) => {
         if (err) throw err;
-        //console.log(JSON.parse(data[urlSplit]))
         let dataSet = JSON.parse(data)
         if (urlSplit[2] >= dataSet.length || urlSplit[2] < 0){
             res.statusCode = 404
@@ -28,11 +24,9 @@ var requestHandler = (req, res) => {
             res.statusCode = 200
             res.end(JSON.stringify(dataSet[urlSplit[2]]))
         }
-        
        });
     }
 };
-
 
 var server = http.createServer(requestHandler)
 
