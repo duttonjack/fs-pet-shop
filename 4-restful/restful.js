@@ -9,9 +9,6 @@ app.use(express.json());
 
 app.use(logger);
 
-
-
-
 app.get('/pets', (req, res) => {
     res.send(petData)
 })
@@ -31,18 +28,29 @@ app.post('/pets', (req, res) => {
     petData.push(pet)
     res.status(200).send(pet)
 })
-
+// Need to theck age is an integer, and kind and name are not missing
 app.patch('/pets/:index', (req, res)=>{
     let index = req.params.index;
     let userInput = req.body
-    // if(userInput.name != '' || userInput.age != number || userInput.kind != ''){
+    // if(typeof userInput.name === undefined || typeof userInput.age !== 'number' || userInput.kind === undefined){
     //     res.status(401).send('error')
     // }
-
-    for (let key in userInput){
-        
+    for (let key in userInput){ 
+        console.log('userInput[key]: ', userInput[key])
+        console.log('key: ', typeof key, key)
+        if (key === "age" && typeof userInput[key] !=='number'){
+                res.status(401).send('Age value must be a number!')
+        }
+        if (key === "kind" && typeof userInput[key] !== "string"){
+            res.status(401).send('Kind value must be a string!')  
+        }
+        if (key === "name" && typeof userInput[key] !== "string"){
+            res.status(401).send('Name value must be a string!')  
+        }
         petData[index][key] = userInput[key]
+    
     } 
+    console.log("made it here")
     res.status(200).send('patched')
 })
 
